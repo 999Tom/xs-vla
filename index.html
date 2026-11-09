@@ -29,7 +29,7 @@
   <div class="hero">
     <div class="hero-title">
       <h1><strong>XS-VLA:</strong> Teaching Tiny Vision-Language-Action Models with Spatial Supervision and Demonstration Conditioning</h1>
-      <p class="authors" aria-label="Authors"><span>Iok Tong Lei</span>, <span>Ying Jie Yap</span>, <span>Wei Huang</span>, <span>Qingchen Xie</span>, <span>Yujie Zhang</span>, <span>Qianzhi Li</span>, <span>Xiaolong Liu</span>, <span>Zhidong Deng</span></p>
+      <p class="authors" aria-label="Authors"><span>Iok Tong Lei</span>, <span>Ying Jie Yap</span>, <span>Wei Huang</span>, <span>Qingchen Xie</span>, <span>Qianzhi Li</span>, <span>Yujie Zhang</span>, <span>Xiaolong Liu</span>, <span>Zhidong Deng</span></p>
       <div class="actions"><a class="button primary" href="https://arxiv.org/abs/2607.04171">Paper on arXiv</a><a class="button" href="https://github.com/999Tom/xs-vla">Code</a><a class="button" href="#demo">Video</a><a class="button" href="#citation">BibTeX</a></div>
     </div>
     <div class="wrap">
@@ -42,7 +42,7 @@
       </figure>
       <div class="overview">
         <p>We study how spatial supervision and robot demonstrations can help a small vision-language-action policy learn better control. XS-VLA uses these signals during training, then runs with <strong>243.99M parameters</strong> and no teacher or posterior encoder.</p>
-        <p>On LIBERO, the full model reaches <strong>90.25% success</strong>, compared with 86.00% for our retrained base. On three Mobile ALOHA tasks, average strict success increases from 21.7% to 65.0%.</p>
+        <p>On LIBERO, the full model reaches <strong>90.25% success in each of two training seeds</strong>, compared with 86.00% for our retrained base. On three Mobile ALOHA tasks, average strict success increases from 21.7% to 65.0%.</p>
       </div>
     </div>
   </div>
@@ -61,29 +61,34 @@
   <section id="results" class="results"><div class="wrap">
     <div class="section-top"><div><h2>LIBERO experiments</h2></div><p>We compare against a SmolVLA-256M base retrained under our settings, using 160k policy-training steps and a common evaluation protocol.</p></div>
     <p class="result-summary">XS-VLA improves average success by <strong>4.25 percentage points</strong> over the retrained base, with the largest gain on the Long suite.</p>
-    <div class="table-scroll" role="region" aria-label="LIBERO success rates; scroll horizontally on small screens" tabindex="0"><table><thead><tr><th scope="col">Policy</th><th scope="col">Spatial</th><th scope="col">Object</th><th scope="col">Goal</th><th scope="col">Long</th><th scope="col">Overall</th></tr></thead><tbody><tr><th scope="row">SmolVLA-256M base</th><td>93%</td><td>88%</td><td>83%</td><td>80%</td><td>86.00%</td></tr><tr class="highlight"><th scope="row">XS-VLA</th><td>93%</td><td>91%</td><td>88%</td><td>89%</td><td>90.25%</td></tr></tbody></table></div>
-    <p class="table-note">Original training run; 100 evaluation episodes per suite, 400 total. A second XS-VLA training seed also achieves 90.25% overall, with suite scores of 93 / 93 / 85 / 90%. Baseline and ablation rows each represent one training run.</p>
+    <div class="table-scroll" role="region" aria-label="LIBERO success rates; scroll horizontally on small screens" tabindex="0"><table><thead><tr><th scope="col">Policy</th><th scope="col">Spatial</th><th scope="col">Object</th><th scope="col">Goal</th><th scope="col">Long</th><th scope="col">Overall</th></tr></thead><tbody><tr><th scope="row">SmolVLA-256M base</th><td>93.0%</td><td>88.0%</td><td>83.0%</td><td>80.0%</td><td>86.0%</td></tr><tr class="highlight"><th scope="row">XS-VLA (original run)</th><td>93.0%</td><td>91.0%</td><td>88.0%</td><td>89.0%</td><td>90.3%</td></tr></tbody></table></div>
+    <p class="table-note"><strong>Reporting precision.</strong> As in the paper, LIBERO table success rates are rounded to one decimal place; the text retains more precise values where reported. For example, 361/400 = 90.25%, displayed as 90.3% in the tables. These are the same result. Average episode steps retain two decimal places.</p>
+    <p class="table-note">Each run uses 100 evaluation episodes per suite (10 per task), 400 total, with the same evaluation seed and protocol. Training seed 1004 scores 93/93/85/90% on Spatial/Object/Goal/Long and 90.25% overall. Both XS-VLA training seeds achieve 361/400 successes; the retrained base achieves 344/400. Two-seed suite means are 93.0 / 92.0 / 86.5 / 89.5%. Baseline and ablation rows each represent one training run.</p>
     <details><summary>Ablations and loss controls</summary><div class="table-scroll" role="region" aria-label="Full LIBERO ablation table" tabindex="0"><table class="ablation-table"><thead><tr><th scope="col">Configuration</th><th scope="col">Spatial</th><th scope="col">Object</th><th scope="col">Goal</th><th scope="col">Long</th><th scope="col">Overall</th><th scope="col">Avg. steps</th></tr></thead><tbody>
-      <tr><td>SmolVLA-256M base</td><td>93</td><td>88</td><td>83</td><td>80</td><td>86.00%</td><td>180.65</td></tr>
-      <tr><td>CSD only</td><td>82</td><td>99</td><td>91</td><td>83</td><td>88.75%</td><td>177.90</td></tr>
-      <tr><td>LFM only</td><td>93</td><td>90</td><td>85</td><td>82</td><td>87.50%</td><td>177.51</td></tr>
-      <tr><td>Image-only + LFM</td><td>90</td><td>94</td><td>82</td><td>89</td><td>88.75%</td><td>173.85</td></tr>
-      <tr><td>CSD + Huber, no latent</td><td>90</td><td>89</td><td>82</td><td>85</td><td>86.50%</td><td>177.73</td></tr>
-      <tr><td>XS-VLA (MSE)</td><td>94</td><td>93</td><td>88</td><td>84</td><td>89.75%</td><td>173.82</td></tr>
-      <tr class="highlight"><td>XS-VLA (Huber)</td><td>93</td><td>91</td><td>88</td><td>89</td><td>90.25%</td><td>172.54</td></tr>
+      <tr><td>SmolVLA-256M base</td><td>93.0</td><td>88.0</td><td>83.0</td><td>80.0</td><td>86.0%</td><td>180.65</td></tr>
+      <tr><td>CSD only</td><td>82.0</td><td>99.0</td><td>91.0</td><td>83.0</td><td>88.8%</td><td>177.90</td></tr>
+      <tr><td>LFM only</td><td>93.0</td><td>90.0</td><td>85.0</td><td>82.0</td><td>87.5%</td><td>177.51</td></tr>
+      <tr><td>Image-only + LFM</td><td>90.0</td><td>94.0</td><td>82.0</td><td>89.0</td><td>88.8%</td><td>173.85</td></tr>
+      <tr><td>CSD + Huber, no latent</td><td>90.0</td><td>89.0</td><td>82.0</td><td>85.0</td><td>86.5%</td><td>177.73</td></tr>
+      <tr><td>XS-VLA (MSE)</td><td>94.0</td><td>93.0</td><td>88.0</td><td>84.0</td><td>89.8%</td><td>173.82</td></tr>
+      <tr class="highlight"><td>XS-VLA (Huber)</td><td>93.0</td><td>91.0</td><td>88.0</td><td>89.0</td><td>90.3%</td><td>172.54</td></tr>
     </tbody></table></div><p class="table-note">Suite values are percentages. LFM includes posterior conditioning, KL regularization, and Huber regression. The base and CSD-only configurations use MSE. XS-VLA (MSE) retains the latent branch and KL schedule, changing only the regression loss. Average steps count environment steps per episode, including the effects of success and termination.</p></details>
     <div class="observations"><p>The matched image-only pretraining control reaches 88.75% with LFM. Using CSD initialization raises this to 90.25%, providing evidence for a benefit beyond image exposure alone.</p><p>With CSD and Huber fixed, adding the posterior-conditioning and KL branch raises success from 86.50% to 90.25%. This gain supports the regularized latent branch as a whole; changing the regression loss alone does not explain it.</p></div>
   </div></section>
 
   <section id="physical" class="physical"><div class="wrap">
-    <div class="section-top"><div><h2>Experiments on Mobile ALOHA</h2></div><p>On three Mobile ALOHA tasks, average strict success rises from 21.7% to 65.0%. Each model is evaluated for 20 trials per task.</p></div>
-    <div class="table-scroll" role="region" aria-label="Mobile ALOHA strict success rates" tabindex="0"><table class="physical-table"><thead><tr><th scope="col">Task</th><th scope="col">SmolVLA base</th><th scope="col">XS-VLA</th><th scope="col">XS-VLA successes</th></tr></thead><tbody>
-      <tr><th scope="row">Cup placing</th><td>45%</td><td><strong>90%</strong></td><td class="count">18 / 20</td></tr>
-      <tr><th scope="row">Dual-arm block stacking</th><td>0%</td><td><strong>30%</strong></td><td class="count">6 / 20</td></tr>
-      <tr><th scope="row">Sequential coordination</th><td>20%</td><td><strong>75%</strong></td><td class="count">15 / 20</td></tr>
-      <tr class="highlight"><th scope="row">Average strict success</th><td>21.7%</td><td>65.0%</td><td></td></tr>
+    <div class="section-top"><div><h2>Experiments on Mobile ALOHA</h2></div><p>On three Mobile ALOHA tasks, average strict success rises from 21.7% to 65.0%. Each task uses 100 demonstrations collected by three operators. Each model is evaluated for 20 trials per task.</p></div>
+    <div class="table-scroll" role="region" aria-label="Mobile ALOHA strict success rates" tabindex="0"><table class="physical-table"><thead><tr><th scope="col">Task</th><th scope="col">SmolVLA-0.25B</th><th scope="col">XS-VLA</th></tr></thead><tbody>
+      <tr><th scope="row">Cup placing</th><td>45.0% (9/20)</td><td><strong>90.0% (18/20)</strong></td></tr>
+      <tr class="count"><th scope="row">95% Wilson interval</th><td>[25.8, 65.8]%</td><td>[69.9, 97.2]%</td></tr>
+      <tr><th scope="row">Dual-arm block stacking</th><td>0.0% (0/20)</td><td><strong>30.0% (6/20)</strong></td></tr>
+      <tr class="count"><th scope="row">95% Wilson interval</th><td>[0.0, 16.1]%</td><td>[14.5, 51.9]%</td></tr>
+      <tr><th scope="row">Stacking partial-credit score</th><td>3/40</td><td>20/40</td></tr>
+      <tr><th scope="row">Sequential coordination</th><td>20.0% (4/20)</td><td><strong>75.0% (15/20)</strong></td></tr>
+      <tr class="count"><th scope="row">95% Wilson interval</th><td>[8.1, 41.6]%</td><td>[53.1, 88.8]%</td></tr>
+      <tr class="highlight"><th scope="row">Average strict success</th><td>21.7%</td><td>65.0%</td></tr>
     </tbody></table></div>
-    <p class="table-note">Both models use 80k policy-training steps. XS-VLA starts from the same 14k CSD checkpoint used for LIBERO. Reported stacking success requires a stable completed stack; partial credit is reported separately in the paper.</p>
+    <p class="table-note">Both models use 80k policy-training steps. XS-VLA starts from the same 14k CSD checkpoint used for LIBERO. Strict stacking success requires a stable completed stack. Partial credit awards one point for bringing two blocks together and two points total for a completed stable stack (40 points maximum). The average uses only the three strict success rates. Wilson intervals assume independent Bernoulli trials.</p>
     <div class="physical-end"><p>The demonstration video also shows XS-VLA operating on <strong>OpenARM, PiPER, and XLeRobot</strong>. These platform-specific deployments provide qualitative evidence across robot platforms.</p><a href="#demo">Watch the video</a></div>
   </div></section>
 
