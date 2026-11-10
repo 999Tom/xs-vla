@@ -8,5 +8,5 @@ Code for XS-VLA.
 
 [Paper](https://arxiv.org/abs/2607.04171)
 
-\\
+\
 [Page](https://999tom.github.io/xs-vla/)
